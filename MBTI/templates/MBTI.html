@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static%}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/MBTItest.css' %}">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+<body class="container">
+    <article class="start">
+        <h1 class="m-5 mb-5 text-center" style="font-size:35px;">사용자<br>여행 성향 테스트</h1>
+            <img class="mt-5 mb-5 start-img" src="https://i.pinimg.com/originals/c3/0d/33/c30d331968725cb5c04f4cb65b0664a5.jpg">
+        <div class="test-start-btn">
+            <button type="button" class="mt-4 btn btn-block" onclick='start();' style="background-color: #9ed3ba">테스트 시작하기</button>
+        </div>
+    </article>
+    <article class="question">
+        <div class="progress mt-5">
+            <div class="progress-bar bg-success" role="progress-bar" style="width: calc(100/8*1%); "></div>
+        </div>
+        <h2 id="title" class="text-center mt-5">문제</h2>
+        <input id="type" type="hidden" value="EI">
+        <button id="A" type="button" class="mt-5 btn" style="background-color: #9ed3ba">Primary</button>
+        <button id="B" type="button" class="mt-5 btn" style="background-color: #9ed3ba">Primary</button>
+    </article>
+    <form class="joinForm" method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+    <article class="result">
+        <input type="hidden" name="mbti" value="">
+        <h2 id="moneytype" class="text-center mt-5">유형</h2>
+        <img id="img" class="mt-3 mb-3 end-img" src="lion.jpg" alt="moneytype" style="width: 220px; height: 220px">
+        <h3 id="explain" class="text-left mt-4" style="font-size:1.2em;">설명</h3>
+        <button type="submit" class="mt-5 btn" style="background-color: #9ed3ba">끝</button>
+    </article>
+    </form>
+    <input type="hidden" id="EI" value="0">
+    <input type="hidden" id="SN" value="0">
+    <input type="hidden" id="TF" value="0">
+    <input type="hidden" id="JP" value="0">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script>
+        var num = 1;
+        var q = {
+            1: {"title": "1번<br><br>여행 떠날 때 계획은?", "type": "EI", "A": "<br>내가 걷는 길이 곧 여행코스야!!<br><br>", "B": "<br>아니?? 계획은 필수지!<br><br>"},
+            2: {"title": "2번<br><br>여행 경비는?", "type": "EI", "A": "<br>걱정 없어!! FLEX<br><br>", "B": "<br>내가 바로 여행가계부~<br><br>"},
+            3: {"title": "3번<br><br>여행 다녀온 후에는?", "type": "EI", "A": "<br>휴식을 취해줘야해... 침대로 고!!<br><br>", "B": "<br>정리부터 해야해!! 캐리어를 열고 정리<br><br>"},
+            4: {"title": "4번<br><br>여행지에서 식사는?", "type": "SN", "A": "<br>유명 맛집이 있으면 웨이팅이 있어도 무조건 고!!<br><br>", "B": "<br>길가다 끌리는 식당으로 바로 고!~!<br><br>"},
+            5: {"title": "5번<br><br>화려한 문화재를 보며 드는 생각은?", "type": "SN", "A": "<br>만들어진 방법과 역사를 심각하게 고민^><^<br><br>", "B": "<br>우...와 감탄만<br><br>"},
+            6: {"title": "6번<br><br>여행지를 선택할 때에는?", "type": "SN", "A": "<br>인기 많고 사람 많은 장소로~~<br><br>", "B": "<br>조용하고 힐링할 수 있는 곳으로<br><br>"},
+            7: {"title": "7번<br><br>친구가 쓸데없는 기념품을 살 때에는?", "type": "TF", "A": "<br>어차피 버릴껀데 왜사냐??<br><br>", "B": "<br>니만 좋으면 나도 좋아~ㅎㅎ<br><br>"},
+            8: {"title": "8번<br><br>여행지에 대한 감상은?", "type": "TF", "A": "<br>수백장 사진찍고 말로 내뱉어야 해!!<br><br>", "B": "<br>내 마음 속에 담고 눈에 담어!!<br><br>"}
+        }
+            // 9: {"title": "9번<br><br>뉴스를 보다가 북극 얼음이 점점 녹고 있다는 이야기를 들었다.", "type": "TF", "A": "<br>북극의 얼음이 녹고있다고?<br>해결방법이 뭐야<br><br>", "B": "<br>북극의 얼음이 녹고있다니..<br>북극곰아 미안해ㅠㅠ<br><br>"},
+            // 10: {"title": "10번<br><br>사고싶은게 있다. 하지만 이번달 생활비가 빠듯하다..", "type": "JP", "A": "<br>다음에 사자!<br><br>", "B": "<br>다음달의 내가 책임져 주겠지<br>일단 사고 보자!<br><br>"},
+            // 11: {"title": "11번<br><br>나의 여행스타일은?", "type": "JP", "A": "<br>이번 여행 예산은 이만큼!<br>더는 안돼!<br><br>", "B": "<br>어머 환전한 돈 다 썼네?<br>카드 쓰지 뭐~<br><br>"},
+            // 12: {"title": "12번<br><br>친구와 만날 때, 나는 어떤 스타일?", "type": "JP", "A": "<br>친구와 만날때 돈은 정확히 반반!<br>회비를 걷자!<br><br>", "B": "<br>친구사이에 뭐~<br>그냥 알아서 쓰는거지!<br><br>"}
+        
+        var result = {
+            "ISTJ": {"moneytype": "소심한 계획형", "explain": "- 인내심이 많으며 책임감이 강합니다.<br> - 여행을 떠나기 전 여행지의 모든 것을 파악해야 안심합니다.<br> - 친구들의 의견을 취합하여 여행 일정을 정리 합니다.<br> - 여행 중 혼자만의 시간을 가져야 감정 소모 없이 무사히 여행을 다녀옵니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/다운로드.png"},
+            "ISFJ": {"moneytype": "소심한 계획형", "explain": "- 인내심이 많으며 책임감이 강합니다.<br> - 여행을 떠나기 전 여행지의 모든 것을 파악해야 안심합니다.<br> - 친구들의 의견을 취합하여 여행 일정을 정리 합니다.<br> - 여행 중 혼자만의 시간을 가져야 감정 소모 없이 무사히 여행을 다녀옵니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/다운로드.png"},
+            "ESTJ": {"moneytype": "소심한 계획형", "explain": "- 인내심이 많으며 책임감이 강합니다.<br> - 여행을 떠나기 전 여행지의 모든 것을 파악해야 안심합니다.<br> - 친구들의 의견을 취합하여 여행 일정을 정리 합니다.<br> - 여행 중 혼자만의 시간을 가져야 감정 소모 없이 무사히 여행을 다녀옵니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/다운로드.png"},
+            "ESFJ": {"moneytype": "소심한 계획형", "explain": "- 인내심이 많으며 책임감이 강합니다.<br> - 여행을 떠나기 전 여행지의 모든 것을 파악해야 안심합니다.<br> - 친구들의 의견을 취합하여 여행 일정을 정리 합니다.<br> - 여행 중 혼자만의 시간을 가져야 감정 소모 없이 무사히 여행을 다녀옵니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/다운로드.png"},
+
+            "ISTP": {"moneytype": "지독한 계획형", "explain": "- 모든 동선과 비용을 고려하여 계획을 짜고, 플랜 A부터 B,C까지 준비니다.<br> - 자신의 계획이 틀어지면 화가 납니다.<br> - 자신의 취향이 확고하며 본인의 생각을 당당히 표현합니다. <br> - 뛰어난 리더쉽 덕분에 친구들의 여행 만족도는 100%라고 합니다.", 
+                    "img": "https://static.waveon.io/img/apps/4954/images.jpg"},
+            "ISFP": {"moneytype": "지독한 계획형", "explain": "- 모든 동선과 비용을 고려하여 계획을 짜고, 플랜 A부터 B,C까지 준비합니다.<br> - 자신의 계획이 틀어지면 화가 납니다.<br> - 자신의 취향이 확고하며 본인의 생각을 당당히 표현합니다. <br> - 뛰어난 리더쉽 덕분에 친구들의 여행 만족도는 100%라고 합니다.", 
+                    "img": "https://static.waveon.io/img/apps/4954/images.jpg"},
+            "ESTP": {"moneytype": "지독한 계획형", "explain": "- 모든 동선과 비용을 고려하여 계획을 짜고, 플랜 A부터 B,C까지 준비합니다.<br> - 자신의 계획이 틀어지면 화가 납니다.<br> - 자신의 취향이 확고하며 본인의 생각을 당당히 표현합니다. <br> - 뛰어난 리더쉽 덕분에 친구들의 여행 만족도는 1000%라고 합니다.", 
+                    "img": "https://static.waveon.io/img/apps/4954/images.jpg"},
+            "ESFP": {"moneytype": "지독한 계획형", "explain": "- 모든 동선과 비용을 고려하여 계획을 짜고, 플랜 A부터 B,C까지 준비합니다.<br> - 자신의 계획이 틀어지면 화가 납니다.<br> - 자신의 취향이 확고하며 본인의 생각을 당당히 표현합니다. <br> - 뛰어난 리더쉽 덕분에 친구들의 여행 만족도는 100%라고 합니다.", 
+                    "img": "https://static.waveon.io/img/apps/4954/images.jpg"},
+
+        
+            "INTJ": {"moneytype": "말많은 무계획형", "explain": "- 먼저 나서서 계획을 짜지는 않지만 친구의 계획에 피드백하고 훈수를 둡니다.<br> - 당신이 여행에서 빛을 발하는 순간은 여행지에 도착하고 나서 부터입니다.<br> - 임기응변 능력이 뛰어납니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/ESvJBgRUMAApOj5.jpg"},
+            "INTP": {"moneytype": "말많은 무계획형", "explain": "- 먼저 나서서 계획을 짜지는 않지만 친구의 계획에 피드백하고 훈수를 둡니다.<br> - 당신이 여행에서 빛을 발하는 순간은 여행지에 도착하고 나서 부터입니다.<br> - 임기응변 능력이 뛰어납니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/ESvJBgRUMAApOj5.jpg"},
+            "ENTJ": {"moneytype": "말많은 무계획형", "explain": "- 먼저 나서서 계획을 짜지는 않지만 친구의 계획에 피드백하고 훈수를 둡니다.<br> - 당신이 여행에서 빛을 발하는 순간은 여행지에 도착하고 나서 부터입니다.<br> - 임기응변 능력이 뛰어납니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/ESvJBgRUMAApOj5.jpg"},
+            "ENTP": {"moneytype": "말많은 무계획형", "explain": "- 먼저 나서서 계획을 짜지는 않지만 친구의 계획에 피드백하고 훈수를 둡니다.<br> - 당신이 여행에서 빛을 발하는 순간은 여행지에 도착하고 나서 부터입니다.<br> - 임기응변 능력이 뛰어납니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/ESvJBgRUMAApOj5.jpg"},
+
+            "INFJ": {"moneytype": "말잘듣는 무계획형", "explain": "- 의견을 물어보면 '아무거나'라고 대답라지만 사실 생각이 다 있습니다.<br> - 인스타 유명 관광지 및 맛집들을 잘 알고 있습니다.<br> - 상상력이 풍부해 여행 중 아찔한 모험, 두근거리는 로맨스 등 혼자서 상상의 나래를 펼칩니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/다운로드 (1).png"},
+            "INFP": {"moneytype": "말잘듣는 무계획형", "explain": "- 의견을 물어보면 '아무거나'라고 대답라지만 사실 생각이 다 있습니다.<br> - 인스타 유명 관광지 및 맛집들을 잘 알고 있습니다.<br> - 상상력이 풍부해 여행 중 아찔한 모험, 두근거리는 로맨스 등 혼자서 상상의 나래를 펼칩니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/다운로드 (1).png"},
+            "ENFJ": {"moneytype": "말잘듣는 무계획형", "explain": "- 의견을 물어보면 '아무거나'라고 대답라지만 사실 생각이 다 있습니다.<br> - 인스타 유명 관광지 및 맛집들을 잘 알고 있습니다.<br> - 상상력이 풍부해 여행 중 아찔한 모험, 두근거리는 로맨스 등 혼자서 상상의 나래를 펼칩니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/다운로드 (1).png"},
+            "ENFP": {"moneytype": "말잘듣는 무계획형", "explain": "- 의견을 물어보면 '아무거나'라고 대답라지만 사실 생각이 다 있습니다.<br> - 인스타 유명 관광지 및 맛집들을 잘 알고 있습니다.<br> - 상상력이 풍부해 여행 중 아찔한 모험, 두근거리는 로맨스 등 혼자서 상상의 나래를 펼칩니다", 
+                    "img": "https://static.waveon.io/img/apps/4954/다운로드 (1).png"},           
+        }
+        function start() {
+            $(".start").hide();
+            $(".question").show();
+            next();
+        }
+        $("#A").click(function(){
+            var type = $("#type").val();
+            var preValue = $("#"+type).val();
+            $("#"+type).val(parseInt(preValue)+1);
+            next();
+        });
+        $("#B").click(function(){
+            next();
+        });
+        function next() {
+            if (num == 9) {
+                $(".question").hide();
+                $(".result").show();
+                var mbti = "";
+                ($("#EI").val() < 2) ? mbti+="I" : mbti+="E";
+                ($("#SN").val() < 2) ? mbti+="N" : mbti+="S";
+                ($("#TF").val() < 2) ? mbti+="F" : mbti+="T";
+                ($("#JP").val() < 2) ? mbti+="P" : mbti+="J";
+                $("#img").attr("src",result[mbti]["img"]);
+                $('input[name="mbti"]').attr('value',result[mbti]["moneytype"]);
+                $("#moneytype").html(result[mbti]["moneytype"]);
+                $("#explain").html(result[mbti]["explain"]);
+            } else {
+                $(".progress-bar").attr('style','width: calc(100/8*'+num+'%)');
+                $("#title").html(q[num]["title"]);
+                $("#type").val(q[num]["type"]);
+                $("#A").html(q[num]["A"]);
+                $("#B").html(q[num]["B"]);
+                num++;
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!-- 로그인 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="UTF-8">
+    <title>다모아 로그인 페이지</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/user2.css' %}">
+  </head>
+<body>
+<!--   <form>
+    <div class="toggle-switch">
+      <input class="check" type="checkbox" id="togleswith" >
+      <label for="togle-swith"></label>
+    </div>
+  </form> -->
+  <div id="header">
+    <h1><img src="https://raw.githubusercontent.com/TravelDamoa/TravelDamoa-App/main/App_Logo_Img/icon1.png" style="width:250px; height:250px;"></h1>
+  </div>
+  <div id="container">
+    <div id="content">
+      <div id="login_form">
+        <form method="POST" action=".">
+        {% csrf_token %}
+        {{error}}
+        <div id="id_area">
+          <span id="input_box">
+            <input id = "user" name = "user" placeholder="성함을 입력해 주세요">
+          </span>
+        </div>
+        <div id="pw_area" >
+          <span id="input_box">
+            <!-- <input type = "password" id = "password" name = "password" placeholder="비밀번호를 입력해 주세요"> -->
+          </span>
+        </div>
+        <div id="login_check">
+          <!-- <input type="checkbox">
+          <label>로그인 상태 유지</label> -->
+        </div>
+        <button style="position: relative;
+                width: 400px;
+                height: 100px;
+                margin-left:200px;
+                margin-top: 50px;
+                margin-bottom: 30px;
+                color:white;
+                border: none; 
+                border-radius: 20px;
+                background-color:#9ed3ba;
+                font-size: 40px;
+                font-weight: bold;"
+                type="submit">
+        테스트하러가기</button>
+        </form>
+      </div>
+      <div id="position_a">
+        <!-- <a href="/user/findID" style="color:black; text-decoration:none">아이디 찾기</a>
+        <span id="var">ㅣ</span>
+        <a href="/user/findPW" style="color:black; text-decoration:none">비밀번호 찾기</a>
+        <span id="var">ㅣ</span>
+        <a href="/user/privacy" style="color:black; text-decoration:none"> 회원가입</a> -->
+      </div>
+      <div id="advertising"></div>
+    </div>
+  </div>
+</body>
+</html>
